@@ -1,0 +1,279 @@
+openapi: 3.0.0
+info:
+  title: Credit Card API
+  description: API for managing credit card data in a banking system
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080/api/payments/v1/cards
+    description: Local API server
+
+paths:
+  /:
+    get:
+      summary: Retrieve all credit cards
+      description: Fetch a paginated list of stored credit cards.
+      operationId: getAllCreditCards
+      parameters:
+        - name: page
+          in: query
+          description: Page number (0-based)
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: Number of records per page
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: sortBy
+          in: query
+          description: Field to sort by
+          required: false
+          schema:
+            type: string
+            default: cardholderName
+        - name: sortDirection
+          in: query
+          description: Sorting order
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+      responses:
+        '200':
+          description: List of credit cards
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CreditCard'
+
+    post:
+      summary: Create a new credit card
+      description: Register a new credit card with a unique identifier.
+      operationId: createCreditCard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditCardRequest'
+      responses:
+        '201':
+          description: Credit card created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditCard'
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /{cardId}:
+    get:
+      summary: Retrieve a credit card by ID
+      description: Fetch credit card details by its unique identifier.
+      operationId: getCreditCardById
+      parameters:
+        - name: cardId
+          in: path
+          required: true
+          description: Unique credit card identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Credit card found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditCard'
+        '404':
+          description: Credit card not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      summary: Update credit card details
+      description: Modify an existing credit card's information.
+      operationId: updateCreditCard
+      parameters:
+        - name: cardId
+          in: path
+          required: true
+          description: Unique credit card identifier
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditCardRequest'
+      responses:
+        '200':
+          description: Credit card updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditCard'
+        '404':
+          description: Credit card not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      summary: Delete a credit card
+      description: Remove a credit card from the system.
+      operationId: deleteCreditCard
+      parameters:
+        - name: cardId
+          in: path
+          required: true
+          description: Unique credit card identifier
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Credit card deleted successfully
+        '404':
+          description: Credit card not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    CreditCard:
+      type: object
+      description: Represents a stored credit card
+      properties:
+        cardId:
+          type: string
+          description: Unique identifier for the credit card
+          example: "cc_123456789"
+        cardholderName:
+          type: string
+          description: Full name of the cardholder
+          example: "John Doe"
+        cardNumber:
+          type: string
+          description: Tokenized/masked credit card number (for security)
+          example: "****-****-****-1234"
+        expirationDate:
+          type: string
+          format: string
+          description: Expiry date in YYYY-MM format
+          example: "2027-03"
+        cardType:
+          type: string
+          enum:
+            - VISA
+            - MASTERCARD
+            - AMEX
+            - DISCOVER
+          description: Credit card network/brand
+          example: "VISA"
+        creditLimit:
+          type: number
+          format: float
+          description: Maximum credit limit
+          example: 5000.00
+        availableBalance:
+          type: number
+          format: float
+          description: Remaining credit available
+          example: 3200.50
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - EXPIRED
+            - BLOCKED
+            - LOST
+          description: Current status of the card
+          example: "ACTIVE"
+        createdAt:
+          type: string
+          format: date-time
+          description: Date the card was issued
+          example: "2023-01-15T10:30:00Z"
+        lastUpdated:
+          type: string
+          format: date-time
+          description: Last updated timestamp
+          example: "2025-03-05T14:22:00Z"
+      required:
+        - cardId
+        - cardholderName
+        - cardNumber
+        - expirationDate
+        - cardType
+        - status
+
+    CreditCardRequest:
+      type: object
+      description: Request payload to create or update a credit card
+      properties:
+        cardholderName:
+          type: string
+          description: Full name of the cardholder
+          example: "John Doe"
+        cardNumber:
+          type: string
+          pattern: "^[0-9]{16}$"
+          description: 16-digit credit card number
+          example: "4111111111111111"
+        expirationDate:
+          type: string
+          format: date
+          description: Expiry date in YYYY-MM format
+          example: "2027-03"
+        cardType:
+          type: string
+          enum:
+            - VISA
+            - MASTERCARD
+            - AMEX
+            - DISCOVER
+          description: Credit card brand
+          example: "VISA"
+        creditLimit:
+          type: number
+          format: float
+          description: Maximum credit limit
+          example: 5000.00
+      required:
+        - cardholderName
+        - cardNumber
+        - expirationDate
+        - cardType
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Error code
+          example: 400
+        message:
+          type: string
+          description: Error message
+          example: "Invalid credit card data provided"
+      required:
+        - code
+        - message

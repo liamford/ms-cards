@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: ms-cards
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+      database: domestic_payments
+  web:
+    cors:
+      allowed-origins: "*"
+      allowed-methods: GET,POST,PUT,DELETE
+server:
+  port: 8080
+  servlet:
+    context-path: /api/payments/v1
