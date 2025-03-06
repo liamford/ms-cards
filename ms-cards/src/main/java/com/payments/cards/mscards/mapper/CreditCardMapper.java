@@ -5,11 +5,14 @@ import com.payments.cards.mscards.swagger.model.CreditCard;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Component
 public class CreditCardMapper {
+
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
     public Card toEntity(CreditCard creditCard) {
         return Card.builder()
@@ -21,8 +24,8 @@ public class CreditCardMapper {
                 .cardType(creditCard.getCardType() != null ? creditCard.getCardType().toString() : null)
                 .creditLimit(Optional.ofNullable(creditCard.getCreditLimit()).map(Float::doubleValue).orElse(0.0))
                 .availableBalance(Optional.ofNullable(creditCard.getAvailableBalance()).map(Float::doubleValue).orElse(0.0))
-                .status(creditCard.getStatus() != null ? creditCard.getStatus().toString() : "ACTIVE")
-                .createdAt(creditCard.getCreatedAt() != null ? creditCard.getCreatedAt().toInstant() : Instant.now())
+                .status(creditCard.getStatus() != null ? creditCard.getStatus().toString() : CreditCard.StatusEnum.ACTIVE.toString())
+                .createdAt(creditCard.getCreatedAt() != null ? Instant.parse(creditCard.getCreatedAt()) : Instant.now())
                 .lastUpdated(Instant.now())
                 .build();
     }
@@ -37,7 +40,11 @@ public class CreditCardMapper {
                 .creditLimit(card.getCreditLimit() != null ? card.getCreditLimit().floatValue() : 0.0f)
                 .availableBalance(card.getAvailableBalance() != null ? card.getAvailableBalance().floatValue() : 0.0f)
                 .status(card.getStatus() != null ? CreditCard.StatusEnum.fromValue(card.getStatus()) : CreditCard.StatusEnum.ACTIVE)
-                .createdAt(card.getCreatedAt() != null ? OffsetDateTime.ofInstant(card.getCreatedAt(), java.time.ZoneOffset.UTC) : null)
-                .lastUpdated(card.getLastUpdated() != null ? OffsetDateTime.ofInstant(card.getLastUpdated(), java.time.ZoneOffset.UTC) : null);
+                .createdAt(card.getCreatedAt() != null ? formatInstant(card.getCreatedAt()) : null)
+                .lastUpdated(card.getLastUpdated() != null ? formatInstant(card.getLastUpdated()) : null);
+    }
+
+    private String formatInstant(Instant instant) {
+        return instant != null ? FORMATTER.format(instant.atOffset(ZoneOffset.UTC)) : null;
     }
 }

@@ -209,12 +209,10 @@ components:
           example: "ACTIVE"
         createdAt:
           type: string
-          format: date-time
           description: Date the card was issued
           example: "2023-01-15T10:30:00Z"
         lastUpdated:
           type: string
-          format: date-time
           description: Last updated timestamp
           example: "2025-03-05T14:22:00Z"
       required:

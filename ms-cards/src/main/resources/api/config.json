@@ -2,5 +2,11 @@
   "library": "spring-mvc",
   "dateLibrary": "java8",
   "hideGenerationTimestamp": true,
-  "modelPackage": "com.payments.cards.mscards.swagger.model"
+  "modelPackage": "com.payments.cards.mscards.swagger.model",
+  "typeMappings": {
+    "date-time": "String"
+  },
+  "importMappings": {
+    "OffsetDateTime": "String"
+  }
 }
