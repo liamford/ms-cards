@@ -8,6 +8,7 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class CreditCardMapper {
@@ -16,7 +17,7 @@ public class CreditCardMapper {
 
     public Card toEntity(CreditCard creditCard) {
         return Card.builder()
-                .id(creditCard.getCardId())
+                .id(Optional.ofNullable(creditCard.getCardId()).orElse(UUID.randomUUID().toString()))
                 .cardholderName(creditCard.getCardholderName())
                 .cardNumber(creditCard.getCardNumber())
                 .maskedCardNumber(creditCard.getCardNumber())
