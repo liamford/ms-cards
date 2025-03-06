@@ -200,6 +200,7 @@ components:
           example: 3200.50
         status:
           type: string
+          default: ACTIVE
           enum:
             - ACTIVE
             - EXPIRED

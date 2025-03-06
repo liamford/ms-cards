@@ -22,10 +22,10 @@ public class CreditCardMapper {
                 .cardNumber(creditCard.getCardNumber())
                 .maskedCardNumber(creditCard.getCardNumber())
                 .expirationDate(creditCard.getExpirationDate())
-                .cardType(creditCard.getCardType() != null ? creditCard.getCardType().toString() : null)
+                .cardType(creditCard.getCardType().toString())
                 .creditLimit(Optional.ofNullable(creditCard.getCreditLimit()).map(Float::doubleValue).orElse(0.0))
                 .availableBalance(Optional.ofNullable(creditCard.getAvailableBalance()).map(Float::doubleValue).orElse(0.0))
-                .status(creditCard.getStatus() != null ? creditCard.getStatus().toString() : CreditCard.StatusEnum.ACTIVE.toString())
+                .status(creditCard.getStatus().toString())
                 .createdAt(creditCard.getCreatedAt() != null ? Instant.parse(creditCard.getCreatedAt()) : Instant.now())
                 .lastUpdated(Instant.now())
                 .build();
