@@ -1,5 +1,6 @@
 package com.payments.cards.mscards.api;
 
+import com.payments.cards.mscards.dto.CardTypeCountDTO;
 import com.payments.cards.mscards.service.CreditCardService;
 import com.payments.cards.mscards.swagger.model.CreditCard;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -45,6 +47,11 @@ public class CreditCardController {
         Optional<CreditCard> creditCard = creditCardService.getCreditCardById(id);
         return creditCard.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/cards/report/card-type")
+    public ResponseEntity<List<CardTypeCountDTO>> getCardTypeReport() {
+       return ResponseEntity.ok(creditCardService.getCreditCardCountsByType());
     }
 
     @PutMapping("/cards/{id}")

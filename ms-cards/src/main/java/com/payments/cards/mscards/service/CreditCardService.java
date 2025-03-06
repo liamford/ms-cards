@@ -1,5 +1,6 @@
 package com.payments.cards.mscards.service;
 
+import com.payments.cards.mscards.dto.CardTypeCountDTO;
 import com.payments.cards.mscards.mapper.CreditCardMapper;
 import com.payments.cards.mscards.model.Card;
 import com.payments.cards.mscards.repository.CreditCardRepository;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,6 +22,10 @@ public class CreditCardService {
     public CreditCardService(CreditCardRepository cardRepository, CreditCardMapper creditCardMapper) {
         this.cardRepository = cardRepository;
         this.creditCardMapper = creditCardMapper;
+    }
+
+    public List<CardTypeCountDTO> getCreditCardCountsByType() {
+        return cardRepository.countCreditCardsByCardType();
     }
 
 
