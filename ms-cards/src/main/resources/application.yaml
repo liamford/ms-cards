@@ -13,3 +13,6 @@ server:
   port: 8080
   servlet:
     context-path: /api/payments/v1
+openai:
+  api:
+    key: ${OPENAI_API_KEY}

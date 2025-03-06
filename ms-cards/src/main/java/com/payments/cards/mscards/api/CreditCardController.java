@@ -1,6 +1,7 @@
 package com.payments.cards.mscards.api;
 
 import com.payments.cards.mscards.dto.CardTypeCountDTO;
+import com.payments.cards.mscards.service.AiQueryService;
 import com.payments.cards.mscards.service.CreditCardService;
 import com.payments.cards.mscards.swagger.model.CreditCard;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +17,13 @@ import java.util.Optional;
 @Slf4j
 public class CreditCardController {
     private final CreditCardService creditCardService;
+    private final AiQueryService aiQueryService;
 
-    public CreditCardController(CreditCardService creditCardService) {
+    public CreditCardController(CreditCardService creditCardService, AiQueryService aiQueryService) {
         this.creditCardService = creditCardService;
+        this.aiQueryService = aiQueryService;
     }
+
 
     @PostMapping("/cards")
     public ResponseEntity<CreditCard> createCreditCard(@Valid  @RequestBody CreditCard creditCard) {
@@ -63,5 +67,10 @@ public class CreditCardController {
     public ResponseEntity<String> deleteCreditCard(@PathVariable String id) {
         creditCardService.deleteCreditCard(id);
         return ResponseEntity.ok("Credit card deleted successfully");
+    }
+
+    @PostMapping("/cards/query")
+    public ResponseEntity<List<CreditCard>> queryCards(@RequestBody String naturalLanguageQuery) {
+        return ResponseEntity.ok(aiQueryService.executeQuery(naturalLanguageQuery));
     }
 }
