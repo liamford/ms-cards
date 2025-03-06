@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Optional;
 
 @Service
@@ -52,4 +53,13 @@ public class CreditCardService {
         cardRepository.deleteById(id);
     }
 
+    public Optional<CreditCard> updateCardStatus(String id, String status) {
+        return cardRepository.findById(id)
+                .map(existingCard -> {
+                    existingCard.setStatus(status);
+                    existingCard.setLastUpdated(Instant.now());
+                    Card savedCard = cardRepository.save(existingCard);
+                    return creditCardMapper.toDto(savedCard);
+                });
+    }
 }

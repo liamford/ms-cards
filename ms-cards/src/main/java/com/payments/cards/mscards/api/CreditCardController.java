@@ -33,6 +33,13 @@ public class CreditCardController {
         return ResponseEntity.ok(creditCardService.getAllCreditCards(page, size));
     }
 
+    @PatchMapping("/cards/{id}/status")
+    public ResponseEntity<CreditCard> updateCardStatus(@PathVariable String id, @Valid @RequestParam CreditCard.StatusEnum status) {
+        Optional<CreditCard> updatedCreditCard = creditCardService.updateCardStatus(id, status.toString());
+        return updatedCreditCard.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/cards/{id}")
     public ResponseEntity<CreditCard> getCreditCardById(@PathVariable String id) {
         Optional<CreditCard> creditCard = creditCardService.getCreditCardById(id);
