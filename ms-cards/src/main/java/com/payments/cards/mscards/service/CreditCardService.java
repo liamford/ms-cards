@@ -5,6 +5,7 @@ import com.payments.cards.mscards.mapper.CreditCardMapper;
 import com.payments.cards.mscards.model.Card;
 import com.payments.cards.mscards.repository.CreditCardRepository;
 import com.payments.cards.mscards.swagger.model.CreditCard;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class CreditCardService {
     }
 
 
+    @CacheEvict(value = "cardTypeCount", allEntries = true)
     public CreditCard createCreditCard(CreditCard creditCard) {
         Card cardEntity = creditCardMapper.toEntity(creditCard);
         Card savedCard = cardRepository.save(cardEntity);
@@ -44,6 +46,7 @@ public class CreditCardService {
         return cardRepository.findById(id).map(creditCardMapper::toDto);
     }
 
+    @CacheEvict(value = "cardTypeCount", allEntries = true)
     public CreditCard updateCreditCard(String id, CreditCard updatedCreditCard) {
         return cardRepository.findById(id)
                 .map(existingCard -> {
@@ -55,10 +58,12 @@ public class CreditCardService {
                 .orElseThrow(() -> new RuntimeException("Credit card not found"));
     }
 
+    @CacheEvict(value = "cardTypeCount", allEntries = true)
     public void deleteCreditCard(String id) {
         cardRepository.deleteById(id);
     }
 
+    @CacheEvict(value = "cardTypeCount", allEntries = true)
     public Optional<CreditCard> updateCardStatus(String id, String status) {
         return cardRepository.findById(id)
                 .map(existingCard -> {
