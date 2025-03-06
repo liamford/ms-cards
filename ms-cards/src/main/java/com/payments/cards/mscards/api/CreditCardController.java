@@ -2,11 +2,8 @@ package com.payments.cards.mscards.api;
 
 import com.payments.cards.mscards.service.CreditCardService;
 import com.payments.cards.mscards.swagger.model.CreditCard;
-import com.payments.cards.mscards.swagger.model.Error;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
