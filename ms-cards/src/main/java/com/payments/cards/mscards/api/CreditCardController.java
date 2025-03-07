@@ -73,4 +73,10 @@ public class CreditCardController {
     public ResponseEntity<List<CreditCard>> queryCards(@RequestBody String naturalLanguageQuery) {
         return ResponseEntity.ok(aiQueryService.executeQuery(naturalLanguageQuery));
     }
+
+    @GetMapping("/cards/search")
+    public ResponseEntity<List<CreditCard>> searchCreditCards(@RequestParam String query) {
+        log.info("Searching credit cards with query: {}", query);
+        return ResponseEntity.ok(creditCardService.searchCreditCardsByCardHolderName(query));
+    }
 }

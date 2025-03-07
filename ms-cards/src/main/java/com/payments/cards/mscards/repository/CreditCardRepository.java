@@ -23,5 +23,8 @@ public interface CreditCardRepository extends MongoRepository<Card, String> {
     @Query(value = "?0")
     List<Card> findByCustomQuery(String query);
 
+    @Query("{ 'cardholderName': { '$regex': ?0, '$options': 'i' } }")
+    List<Card> searchByCardHolderName(String searchText);
+
 
 }

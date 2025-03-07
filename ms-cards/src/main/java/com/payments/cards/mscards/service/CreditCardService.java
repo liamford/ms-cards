@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CreditCardService {
@@ -72,5 +73,12 @@ public class CreditCardService {
                     Card savedCard = cardRepository.save(existingCard);
                     return creditCardMapper.toDto(savedCard);
                 });
+    }
+
+    public List<CreditCard> searchCreditCardsByCardHolderName(String searchText) {
+        return cardRepository.searchByCardHolderName(searchText)
+                .stream()
+                .map(creditCardMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

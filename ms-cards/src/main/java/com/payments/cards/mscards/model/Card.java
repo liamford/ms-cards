@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.*;
@@ -23,6 +24,7 @@ public class Card {
     private String id;  // MongoDB _id field
 
     @NotBlank(message = "Cardholder name is required")
+    @TextIndexed
     private String cardholderName;
 
     @NotBlank(message = "Card number is required")
