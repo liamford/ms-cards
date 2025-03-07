@@ -20,7 +20,7 @@ public class CreditCardMapper {
                 .id(Optional.ofNullable(creditCard.getCardId()).orElse(UUID.randomUUID().toString()))
                 .cardholderName(creditCard.getCardholderName())
                 .cardNumber(creditCard.getCardNumber())
-                .maskedCardNumber(creditCard.getCardNumber())
+                .maskedCardNumber(maskCreditCardNumber(creditCard.getCardNumber()))
                 .expirationDate(creditCard.getExpirationDate())
                 .cardType(creditCard.getCardType().toString())
                 .creditLimit(Optional.ofNullable(creditCard.getCreditLimit()).map(Float::doubleValue).orElse(0.0))
@@ -47,5 +47,13 @@ public class CreditCardMapper {
 
     private String formatInstant(Instant instant) {
         return instant != null ? FORMATTER.format(instant.atOffset(ZoneOffset.UTC)) : null;
+    }
+
+
+    public String maskCreditCardNumber(String creditCardNumber) {
+        if (creditCardNumber == null || creditCardNumber.length() < 4) {
+            throw new IllegalArgumentException("Invalid credit card number");
+        }
+        return "**** **** **** " + creditCardNumber.substring(creditCardNumber.length() - 4);
     }
 }
