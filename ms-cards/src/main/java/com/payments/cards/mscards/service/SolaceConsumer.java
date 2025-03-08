@@ -27,6 +27,11 @@ public class SolaceConsumer {
             XMLMessageConsumer consumer = jcsmpSession.getMessageConsumer(new XMLMessageListener() {
                 @Override
                 public void onReceive(BytesXMLMessage msg) {
+                    try {
+                        log.info("Consumer initialized for ID: {} and application: {}", msg.getCorrelationId(), msg.getProperties().get("application").toString());
+                    } catch (SDTException e) {
+                        log.error("Failed to get application property", e);
+                    }
                     if (msg instanceof TextMessage) {
                         TextMessage textMessage = (TextMessage) msg;
                         log.info("Received message: " + textMessage.getText());

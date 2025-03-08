@@ -3,6 +3,7 @@ package com.payments.cards.mscards.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.payments.cards.mscards.model.Card;
 import com.solacesystems.jcsmp.*;
+import lombok.extern.slf4j.Slf4j;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONObject;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.io.InputStream;
 
 @Service
+@Slf4j
 public class SolacePublisher {
 
     private final JCSMPSession jcsmpSession;
@@ -43,12 +45,12 @@ public class SolacePublisher {
         XMLMessageProducer producer = jcsmpSession.getMessageProducer(new JCSMPStreamingPublishEventHandler() {
             @Override
             public void responseReceived(String messageID) {
-                System.out.println("Producer received response for msg: " + messageID);
+                log.info("Producer received response for msg: {}" , messageID);
             }
 
             @Override
             public void handleError(String messageID, JCSMPException e, long timestamp) {
-                System.out.println("Producer received error for msg: " + messageID + " - " + e);
+               log.warn("Producer received error for msg: {}" ,messageID , e);
             }
         });
 
@@ -56,6 +58,11 @@ public class SolacePublisher {
         try {
             String cardJson = objectMapper.writeValueAsString(card);
             TextMessage message = JCSMPFactory.onlyInstance().createMessage(TextMessage.class);
+            message.setCorrelationId(card.getId());
+            SDTMap properties = JCSMPFactory.onlyInstance().createMap();
+            properties.putString("application", "ms-cards");
+            message.setProperties(properties);
+            message.setApplicationMessageId(card.getId());
             message.setText(cardJson);
             producer.send(message, topic);
         } catch (Exception e) {
