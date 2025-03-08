@@ -5,6 +5,7 @@ import com.payments.cards.mscards.mapper.CreditCardMapper;
 import com.payments.cards.mscards.model.Card;
 import com.payments.cards.mscards.repository.CreditCardRepository;
 import com.payments.cards.mscards.swagger.model.CreditCard;
+import com.solacesystems.jcsmp.JCSMPException;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,10 +21,12 @@ public class CreditCardService {
 
     private final CreditCardRepository cardRepository;
     private final CreditCardMapper creditCardMapper;
+    private final SolacePublisher solacePublisher;
 
-    public CreditCardService(CreditCardRepository cardRepository, CreditCardMapper creditCardMapper) {
+    public CreditCardService(CreditCardRepository cardRepository, CreditCardMapper creditCardMapper, SolacePublisher solacePublisher) {
         this.cardRepository = cardRepository;
         this.creditCardMapper = creditCardMapper;
+        this.solacePublisher = solacePublisher;
     }
 
     public List<CardTypeCountDTO> getCreditCardCountsByType() {
@@ -32,9 +35,10 @@ public class CreditCardService {
 
 
     @CacheEvict(value = "cardTypeCount", allEntries = true)
-    public CreditCard createCreditCard(CreditCard creditCard) {
+    public CreditCard createCreditCard(CreditCard creditCard) throws JCSMPException {
         Card cardEntity = creditCardMapper.toEntity(creditCard);
         Card savedCard = cardRepository.save(cardEntity);
+        solacePublisher.publishCard(savedCard);
         return creditCardMapper.toDto(savedCard);
     }
 

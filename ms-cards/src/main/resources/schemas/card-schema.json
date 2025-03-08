@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "cardholderName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cardNumber": {
+      "type": "string",
+      "pattern": "^\\d{16}$"
+    },
+    "expirationDate": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}$"
+    },
+    "cardType": {
+      "type": "string"
+    },
+    "creditLimit": {
+      "type": "number",
+      "minimum": 1
+    },
+    "availableBalance": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string"
+    },
+    "maskedCardNumber": {
+      "type": "string"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id", "cardholderName", "cardNumber", "expirationDate",
+    "cardType", "creditLimit", "availableBalance", "status"
+  ]
+}

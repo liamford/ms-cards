@@ -19,3 +19,9 @@ server:
 openai:
   api:
     key: ${OPENAI_API_KEY}
+solace:
+  java:
+    host: tcps://mr-connection-reun98uax5e.messaging.solace.cloud:55443
+    msgVpn: ms-cards
+    clientUsername: ${SOLACE_USERNAME}
+    clientPassword: ${SOLACE_PASSWORD}

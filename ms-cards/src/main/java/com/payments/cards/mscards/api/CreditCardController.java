@@ -4,6 +4,7 @@ import com.payments.cards.mscards.dto.CardTypeCountDTO;
 import com.payments.cards.mscards.service.AiQueryService;
 import com.payments.cards.mscards.service.CreditCardService;
 import com.payments.cards.mscards.swagger.model.CreditCard;
+import com.solacesystems.jcsmp.JCSMPException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class CreditCardController {
 
 
     @PostMapping("/cards")
-    public ResponseEntity<CreditCard> createCreditCard(@Valid  @RequestBody CreditCard creditCard) {
+    public ResponseEntity<CreditCard> createCreditCard(@Valid  @RequestBody CreditCard creditCard) throws JCSMPException {
         log.info("Creating credit card: {}", creditCard);
         return ResponseEntity.ok(creditCardService.createCreditCard(creditCard));
     }
