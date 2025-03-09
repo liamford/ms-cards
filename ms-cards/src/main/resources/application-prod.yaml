@@ -6,9 +6,9 @@ spring:
       bindings:
         transformFunction-in-0:
           destination: payments/credit-cards/initiate
-          group: ms-cards
+          group: ms-cards-group
         transformFunction-out-0:
-          destination: payments/credit-cards/completed
+          destination: payments/credit-cards/notification
       binders:
         solace:
           type: solace
