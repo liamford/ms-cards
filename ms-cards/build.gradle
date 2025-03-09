@@ -37,6 +37,8 @@ dependencies {
     implementation 'com.theokanning.openai-gpt3-java:service:0.18.2'
     implementation 'io.springfox:springfox-swagger2:3.0.0'
     implementation 'com.squareup.retrofit2:converter-jackson:2.11.0'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config:4.2.0'
+    implementation 'org.springframework.security:spring-security-crypto:6.4.3'
     implementation 'org.everit.json:org.everit.json.schema:1.5.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.3'
     swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.52'

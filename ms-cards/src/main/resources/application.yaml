@@ -40,3 +40,7 @@ solace:
     msgVpn: ms-cards
     clientUsername: ${SOLACE_USERNAME}
     clientPassword: ${SOLACE_PASSWORD}
+
+encrypt:
+  key: ${ENCRYPT_KEY}
+  salt: ${ENCRYPT_SALT}

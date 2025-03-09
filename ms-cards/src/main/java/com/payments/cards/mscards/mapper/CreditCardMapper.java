@@ -1,7 +1,9 @@
 package com.payments.cards.mscards.mapper;
 
 import com.payments.cards.mscards.model.Card;
+import com.payments.cards.mscards.service.CryptoUtil;
 import com.payments.cards.mscards.swagger.model.CreditCard;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -10,16 +12,23 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Component
 public class CreditCardMapper {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
+    private final CryptoUtil cryptoUtil;
+
+    public CreditCardMapper(CryptoUtil cryptoUtil) {
+        this.cryptoUtil = cryptoUtil;
+    }
+
     public Card toEntity(CreditCard creditCard) {
         return Card.builder()
                 .id(Optional.ofNullable(creditCard.getCardId()).orElse(UUID.randomUUID().toString()))
                 .cardholderName(creditCard.getCardholderName())
-                .cardNumber(creditCard.getCardNumber())
+                .cardNumber(cryptoUtil.encrypt(creditCard.getCardNumber()))
                 .maskedCardNumber(maskCreditCardNumber(creditCard.getCardNumber()))
                 .expirationDate(creditCard.getExpirationDate())
                 .cardType(creditCard.getCardType().toString())
