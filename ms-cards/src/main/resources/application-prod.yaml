@@ -1,6 +1,24 @@
 spring:
   application:
     name: ms-cards
+  cloud:
+    stream:
+      bindings:
+        transformFunction-in-0:
+          destination: payments/credit-cards/initiate
+          group: ms-cards
+        transformFunction-out-0:
+          destination: payments/credit-cards/completed
+      binders:
+        solace:
+          type: solace
+          environment:
+            solace:
+              java:
+                host: tcps://mr-connection-reun98uax5e.messaging.solace.cloud:55443
+                msgVpn: ms-cards
+                clientUsername: ${SOLACE_USERNAME}
+                clientPassword: ${SOLACE_PASSWORD}
   data:
     mongodb:
       uri: ${MONGODB_URI}
