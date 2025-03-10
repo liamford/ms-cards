@@ -41,7 +41,7 @@ public class CreditCardController {
     }
 
     @PatchMapping("/cards/{id}/status")
-    public ResponseEntity<CreditCard> updateCardStatus(@PathVariable String id, @Valid @RequestParam CreditCard.StatusEnum status) {
+    public ResponseEntity<CreditCard> updateCardStatus(@PathVariable String id, @Valid @RequestParam CreditCard.StatusEnum status) throws JCSMPException {
         Optional<CreditCard> updatedCreditCard = creditCardService.updateCardStatus(id, status.toString());
         return updatedCreditCard.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -65,7 +65,7 @@ public class CreditCardController {
     }
 
     @DeleteMapping("/cards/{id}")
-    public ResponseEntity<String> deleteCreditCard(@PathVariable String id) {
+    public ResponseEntity<String> deleteCreditCard(@PathVariable String id) throws JCSMPException {
         creditCardService.deleteCreditCard(id);
         return ResponseEntity.ok("Credit card deleted successfully");
     }

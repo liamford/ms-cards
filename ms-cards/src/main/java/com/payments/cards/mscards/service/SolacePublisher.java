@@ -38,10 +38,10 @@ public class SolacePublisher {
         }
     }
 
-    public void publishCard(Card card) throws JCSMPException {
+    public void publishCard(Card card, String topicName) throws JCSMPException {
 
         validateCard(card);
-        Topic topic = JCSMPFactory.onlyInstance().createTopic("payments/credit-cards/initiate");
+        Topic topic = JCSMPFactory.onlyInstance().createTopic(topicName);
         XMLMessageProducer producer = jcsmpSession.getMessageProducer(new JCSMPStreamingPublishEventHandler() {
             @Override
             public void responseReceived(String messageID) {

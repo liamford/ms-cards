@@ -7,7 +7,7 @@ spring:
     stream:
       bindings:
         transformFunction-in-0:
-          destination: payments/credit-cards/initiate
+          destination: payments/credit-cards/initiate,payments/credit-cards/updated,payments/credit-cards/deleted
           group: ms-cards-group
         transformFunction-out-0:
           destination: payments/credit-cards/notification

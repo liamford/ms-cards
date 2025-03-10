@@ -15,4 +15,5 @@ public class Notification {
     private String maskedCardNumber;
     private String status;
     private String cardholderName;
+    private String action;
 }
