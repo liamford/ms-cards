@@ -2,6 +2,8 @@ spring:
   application:
     name: ms-cards
   cloud:
+    function:
+      definition: transformFunction;limitCheckFunction;statusCheckFunction
     config:
       enabled: false
     stream:
@@ -11,6 +13,16 @@ spring:
           group: ms-cards-group
         transformFunction-out-0:
           destination: payments/credit-cards/notification
+        limitCheckFunction-in-0:
+          destination: payments/credit-cards/validate
+          group: ms-cards-limit
+        limitCheckFunction-out-0:
+          destination: payments/credit-cards/validation/response
+        statusCheckFunction-in-0:
+          destination: payments/credit-cards/validate
+          group: ms-cards-status
+        statusCheckFunction-out-0:
+          destination: payments/credit-cards/validation/response
       binders:
         solace:
           type: solace

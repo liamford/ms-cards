@@ -40,6 +40,7 @@ public class CreditCardService {
     @CacheEvict(value = "cardTypeCount", allEntries = true)
     public CreditCard createCreditCard(CreditCard creditCard) throws JCSMPException {
         Card cardEntity = creditCardMapper.toEntity(creditCard);
+        solacePublisher.verifyCreditCard(cardEntity);
         Card savedCard = cardRepository.save(cardEntity);
         solacePublisher.publishCard(savedCard,CARD_INITIATE_TOPIC);
         return creditCardMapper.toDto(savedCard);

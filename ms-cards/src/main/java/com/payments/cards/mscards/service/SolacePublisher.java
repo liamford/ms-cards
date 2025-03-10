@@ -76,6 +76,35 @@ public class SolacePublisher {
     }
 
 
+    public void verifyCreditCard(Card card) throws JCSMPException {
+
+        Topic topic = JCSMPFactory.onlyInstance().createTopic("payments/credit-cards/validate");
+        XMLMessageProducer producer = jcsmpSession.getMessageProducer(new JCSMPStreamingPublishEventHandler() {
+            @Override
+            public void responseReceived(String messageID) {
+                log.info("Producer received response for msg: {}" , messageID);
+            }
+
+            @Override
+            public void handleError(String messageID, JCSMPException e, long timestamp) {
+                log.warn("Producer received error for msg: {}" ,messageID , e);
+            }
+        });
 
 
+        try {
+            String cardJson = objectMapper.writeValueAsString(card);
+            TextMessage message = JCSMPFactory.onlyInstance().createMessage(TextMessage.class);
+            message.setCorrelationId(card.getId());
+            SDTMap properties = JCSMPFactory.onlyInstance().createMap();
+            properties.putString("application", "ms-cards");
+            message.setProperties(properties);
+            message.setApplicationMessageId(card.getId());
+            message.setText(cardJson);
+            producer.send(message, topic);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to serialize Card object to JSON", e);
+        }
+
+    }
 }
