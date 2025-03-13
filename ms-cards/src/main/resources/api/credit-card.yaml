@@ -206,6 +206,7 @@ components:
             - EXPIRED
             - BLOCKED
             - LOST
+            - INACTIVE
           description: Current status of the card
           example: "ACTIVE"
         createdAt:

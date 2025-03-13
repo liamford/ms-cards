@@ -3,7 +3,7 @@ spring:
     name: ms-cards
   cloud:
     function:
-      definition: transformFunction;limitCheckFunction;statusCheckFunction
+      definition: transformFunction;limitCheckFunction;statusCheckFunction;responseFunction;eventSourceFunction
     config:
       enabled: false
     stream:
@@ -23,6 +23,19 @@ spring:
           group: ms-cards-status
         statusCheckFunction-out-0:
           destination: payments/credit-cards/validation/response
+        responseFunction-in-0:
+          destination: payments/credit-cards/validation/response
+          group: ms-validation-response
+        eventSourceFunction-in-0:
+          destination: payments/credit-cards
+          group: ms-slurper
+      solace:
+        bindings:
+          eventSourceFunction-in-0:
+            consumer:
+              provisionDurableQueue: true
+              queue-additional-subscriptions:
+                - payments/credit-cards/*
       binders:
         solace:
           type: solace

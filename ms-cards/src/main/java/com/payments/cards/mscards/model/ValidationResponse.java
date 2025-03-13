@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ValidationResponse {
+    private String id;
     private boolean isValid;
     private String validation;
 }

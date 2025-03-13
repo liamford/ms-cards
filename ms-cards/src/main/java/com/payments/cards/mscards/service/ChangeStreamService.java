@@ -16,11 +16,9 @@ import org.springframework.stereotype.Service;
 public class ChangeStreamService {
 
     private final MongoClient mongoClient;
-    private final CreditCardService creditCardService;
 
-    public ChangeStreamService(MongoClient mongoClient, CreditCardService creditCardService) {
+    public ChangeStreamService(MongoClient mongoClient) {
         this.mongoClient = mongoClient;
-        this.creditCardService = creditCardService;
     }
 
     @EventListener(ContextRefreshedEvent.class)

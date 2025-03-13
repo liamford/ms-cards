@@ -6,6 +6,7 @@ import com.payments.cards.mscards.model.Card;
 import com.payments.cards.mscards.repository.CreditCardRepository;
 import com.payments.cards.mscards.swagger.model.CreditCard;
 import com.solacesystems.jcsmp.JCSMPException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class CreditCardService {
 
     private final CreditCardRepository cardRepository;
@@ -40,8 +42,10 @@ public class CreditCardService {
     @CacheEvict(value = "cardTypeCount", allEntries = true)
     public CreditCard createCreditCard(CreditCard creditCard) throws JCSMPException {
         Card cardEntity = creditCardMapper.toEntity(creditCard);
+        cardEntity.setStatus(CreditCard.StatusEnum.INACTIVE.toString());
         solacePublisher.verifyCreditCard(cardEntity);
         Card savedCard = cardRepository.save(cardEntity);
+        // save card as Pending
         solacePublisher.publishCard(savedCard,CARD_INITIATE_TOPIC);
         return creditCardMapper.toDto(savedCard);
     }
@@ -82,6 +86,7 @@ public class CreditCardService {
 
     @CacheEvict(value = "cardTypeCount", allEntries = true)
     public Optional<CreditCard> updateCardStatus(String id, String status) {
+        log.info("Updating card status for card ID: {} to {}", id, status);
         return cardRepository.findById(id)
                 .map(existingCard -> {
                     existingCard.setStatus(status);
