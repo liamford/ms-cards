@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option java_package = "com.payments.cards.mscards.grpc";
+option java_outer_classname = "CardServiceProto";
+
+service CardService {
+    rpc GetCardDetails (CardIdRequest) returns (CardDetailsResponse);
+}
+
+message CardIdRequest {
+    string cardId = 1;
+}
+
+message CardDetailsResponse {
+    string cardId = 1;
+    string cardholderName = 2;
+    string cardNumber = 3;
+    string expirationDate = 4;
+    string cardType = 5;
+    double creditLimit = 6;
+    double availableBalance = 7;
+    string status = 8;
+    string createdAt = 9;
+    string lastUpdated = 10;
+    string error = 11;
+}

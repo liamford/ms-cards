@@ -74,3 +74,6 @@ solace:
 encrypt:
   key: ${ENCRYPT_KEY}
   salt: ${ENCRYPT_SALT}
+grpc:
+  server:
+    port: 9090

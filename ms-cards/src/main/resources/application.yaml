@@ -2,13 +2,40 @@ spring:
   application:
     name: ms-cards
   cloud:
+    function:
+      definition: transformFunction;limitCheckFunction;statusCheckFunction;responseFunction;eventSourceFunction
+    config:
+      enabled: false
     stream:
       bindings:
         transformFunction-in-0:
-          destination: payments/credit-cards/initiate
+          destination: payments/credit-cards/initiate,payments/credit-cards/updated,payments/credit-cards/deleted
           group: ms-cards-group
         transformFunction-out-0:
           destination: payments/credit-cards/notification
+        limitCheckFunction-in-0:
+          destination: payments/credit-cards/validate
+          group: ms-cards-limit
+        limitCheckFunction-out-0:
+          destination: payments/credit-cards/validation/response
+        statusCheckFunction-in-0:
+          destination: payments/credit-cards/validate
+          group: ms-cards-status
+        statusCheckFunction-out-0:
+          destination: payments/credit-cards/validation/response
+        responseFunction-in-0:
+          destination: payments/credit-cards/validation/response
+          group: ms-validation-response
+        eventSourceFunction-in-0:
+          destination: payments/credit-cards
+          group: ms-slurper
+      solace:
+        bindings:
+          eventSourceFunction-in-0:
+            consumer:
+              provisionDurableQueue: true
+              queue-additional-subscriptions:
+                - payments/credit-cards/*
       binders:
         solace:
           type: solace
@@ -23,6 +50,9 @@ spring:
     mongodb:
       uri: ${MONGODB_URI}
       database: domestic_payments
+  docker:
+    compose:
+      enabled: false
   web:
     cors:
       allowed-origins: "*"
@@ -44,3 +74,6 @@ solace:
 encrypt:
   key: ${ENCRYPT_KEY}
   salt: ${ENCRYPT_SALT}
+grpc:
+  server:
+    port: 9090
