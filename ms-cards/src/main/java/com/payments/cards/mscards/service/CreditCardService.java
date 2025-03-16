@@ -67,11 +67,7 @@ public class CreditCardService {
                     updatedCard.setId(id);
                     updatedCard.setLastUpdated(existingCard.getLastUpdated());
                     CreditCard creditCard =  creditCardMapper.toDto(cardRepository.save(updatedCard));
-                    try {
-                        solacePublisher.publishCard(updatedCard,CARD_UPDATE_TOPIC);
-                    } catch (JCSMPException e) {
-                        throw new RuntimeException(e);
-                    }
+                    solacePublisher.publishCard(updatedCard,CARD_UPDATE_TOPIC);
                     return creditCard;
                 })
                 .orElseThrow(() -> new RuntimeException("Credit card not found"));
@@ -92,11 +88,7 @@ public class CreditCardService {
                     existingCard.setStatus(status);
                     existingCard.setLastUpdated(Instant.now());
                     Card savedCard = cardRepository.save(existingCard);
-                    try {
-                        solacePublisher.publishCard(savedCard,CARD_UPDATE_TOPIC);
-                    } catch (JCSMPException e) {
-                        throw new RuntimeException(e);
-                    }
+                    solacePublisher.publishCard(savedCard,CARD_UPDATE_TOPIC);
                     return creditCardMapper.toDto(savedCard);
                 });
     }

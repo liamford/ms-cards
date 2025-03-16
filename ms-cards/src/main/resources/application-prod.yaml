@@ -76,4 +76,5 @@ encrypt:
   salt: ${ENCRYPT_SALT}
 grpc:
   server:
+    host: localhost
     port: 9090
