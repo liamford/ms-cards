@@ -42,13 +42,18 @@ spring:
           environment:
             solace:
               java:
-                host: tcps://mr-connection-reun98uax5e.messaging.solace.cloud:55443
-                msgVpn: ms-cards
-                clientUsername: ${SOLACE_USERNAME}
-                clientPassword: ${SOLACE_PASSWORD}
+                host: tcp://localhost:55554
+                msgVpn: default
+                clientUsername: admin
+                clientPassword: admin
+                ssl:
+                  validateCertificate: false
+                  validateCertificateChain: false
+                  validateHostName: false
+                  validateCertificateDate: false
   data:
     mongodb:
-      uri: ${MONGODB_URI}
+      uri: mongodb://root:secret@localhost:27017/domestic_payments?authSource=admin
       database: domestic_payments
   docker:
     compose:
@@ -58,7 +63,7 @@ spring:
       allowed-origins: "*"
       allowed-methods: GET,POST,PUT,DELETE
 server:
-  port: 8080
+  port: 80
   servlet:
     context-path: /api/payments/v1
 openai:
@@ -66,10 +71,10 @@ openai:
     key: ${OPENAI_API_KEY}
 solace:
   java:
-    host: tcps://mr-connection-reun98uax5e.messaging.solace.cloud:55443
-    msgVpn: ms-cards
-    clientUsername: ${SOLACE_USERNAME}
-    clientPassword: ${SOLACE_PASSWORD}
+    host: tcp://localhost:55554
+    msgVpn: default
+    clientUsername: admin
+    clientPassword: admin
 
 encrypt:
   key: ${ENCRYPT_KEY}
